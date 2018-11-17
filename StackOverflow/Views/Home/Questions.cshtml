@@ -1,0 +1,48 @@
+﻿@model IEnumerable<StackOverflow.Models.Question>
+
+@{
+    ViewBag.Title = "Questions";
+}
+
+<h2>Questions</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <div id="votes_div">
+                    @Html.DisplayFor(modelItem => item.VoteCount) Votes
+                </div>
+
+            </td>
+            <td>
+                <div id="votes_div">
+                    @Html.DisplayFor(modelItem => item.AnswerCount) Answers
+                </div>
+            </td>
+            <td>
+                <div id="votes_div">
+                    @Html.DisplayFor(modelItem => item.ViewCount) Views
+                </div>
+            </td>
+            <td>
+                @Html.ActionLink(item.QuestionName, "AnswerQuestion", "Questions", new { id = item.Id }, null)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

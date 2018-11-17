@@ -1,0 +1,57 @@
+﻿@model StackOverflow.Models.Question
+
+@{
+    ViewBag.Title = "AnswerQuestion";
+}
+
+<h2>AnswerQuestion</h2>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.QuestionName)</h4>
+    <div id="toprow">
+        <span>
+            @Html.DisplayFor(model => model.Category.Name)
+        </span>
+        <span>
+            @Html.DisplayFor(model => model.User.Name)
+        </span>
+        <span>
+            @Html.DisplayFor(model => model.CreationDate)
+        </span>
+        <span>
+            @Html.DisplayFor(model => model.ViewCount) Views
+        </span>
+    </div>
+    <div id="answers">
+        <ul>
+            @foreach (var item in Model.Answers)
+            {   <li>
+                    <span id="answer">
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </span>
+                    <span>
+                        @Html.DisplayFor(modelItem => item.User.Name)
+                    </span>
+                    <span>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </span>
+                    <div>
+                        @if (item.User.Id == 1)
+                        {
+                            <a class="btn btn-default" href="XXX">Edit &raquo;</a>
+                        }
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <div id="newAnswer">
+        <h3>Add your Answer</h3>
+        <textarea rows="5" cols="100"></textarea>
+        @Html.ActionLink("Add Answer", "Index")
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

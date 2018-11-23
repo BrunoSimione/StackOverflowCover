@@ -8,12 +8,7 @@ namespace StackOverflow.Models
 {
     public class User
     {
-        public User()
-        {
-            Questions = new List<Question>();
-            Answers = new List<Answer>();
-        }
-
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

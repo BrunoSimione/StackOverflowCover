@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using StackOverflow.Models;
+using System.Data.Entity;
 
 namespace StackOverflow.Controllers
 {
@@ -33,7 +34,10 @@ namespace StackOverflow.Controllers
             ViewBag.Message = "Your categories page.";
             using (QuestionAnswerContext context = new QuestionAnswerContext())
             {
-                var list = context.Categories.OrderBy(x => x.Id).ToList();
+                var list = context.Categories
+                    .OrderBy(x => x.Id)
+                    .ToList();
+
                 return View(list);
             }
         }
@@ -43,7 +47,11 @@ namespace StackOverflow.Controllers
             ViewBag.Message = "Your questions page.";
             using (QuestionAnswerContext context = new QuestionAnswerContext())
             {
-                var list = context.Questions.OrderBy(x => x.CreationDate).ToList();
+                var list = context.Questions
+                    .OrderBy(x => x.CreationDate)
+                    .Include(x => x.User)
+                    .Include(x => x.Category)
+                    .ToList();
                 return View(list);
             }
         }

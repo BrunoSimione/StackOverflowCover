@@ -8,7 +8,9 @@ namespace StackOverflow.Models
 {
     public class Answer
     {
+        [Key]
         public int Id { get; set; }
+        [DataType(DataType.MultilineText)]
         public string Text { get; set; }
         public DateTime CreationDate { get; set; }
 

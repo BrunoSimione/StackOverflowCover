@@ -8,13 +8,10 @@ namespace StackOverflow.Models
 {
     public class Question
     {
-        public Question()
-        {
-            Answers = new List<Answer>();
-        }
-
+        [Key]
         public int Id { get; set; }
         public string QuestionName { get; set; }
+        [DisplayFormat(DataFormatString = "{0:G}")]
         public DateTime CreationDate { get; set; }
         public int ViewCount { get; set; }
         public int AnswerCount { get; set; }

@@ -16,13 +16,46 @@ namespace StackOverflow.Controllers
             return View();
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Test/Create
+        [HttpPost]
+        public ActionResult Create(Question question)
+        {
+            try
+            {
+                using (QuestionAnswerContext context = new QuestionAnswerContext())
+                {
+                    question.Category = context.Categories.Find(1);
+                    question.User = context.Users.Find(1);
+
+                    question.CreationDate = DateTime.Now;
+
+                    question.AnswerCount = 0;
+                    question.ViewCount = 0;
+                    question.VoteCount = 0;
+
+                    context.Questions.Add(question);
+                    context.SaveChanges();
+
+                    return RedirectToAction("Questions", "Home", null);
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+    
+
         public ActionResult AnswerQuestion(int id)
         {
             using (QuestionAnswerContext context = new QuestionAnswerContext())
             {
-                //var list = context.Questions.OrderBy(x => x.CreationDate).ToList();
 
-                //var question = context.Questions.Where(q => q.Id == id)
                 var question = context.Questions
                         .Where(q => q.Id == id)
                         .Include(q => q.Category)
@@ -34,36 +67,54 @@ namespace StackOverflow.Controllers
                 question.ViewCount += 1;
                 context.SaveChanges();
 
-                /*
-                for(int i = 0; i < question.Answers.Count; i++)
-                {
-                    context.Questions.Include(q => q.Answers[i]);
-                }
-                */
 
-                /*
-                context.Entry(question).Reference(s => s.Category).Load();
-                context.Entry(question).Reference(s => s.User).Load();
-                context.Entry(question).Collection(s => s.Answers).Load();
-                
-                var answers = context.Entry(question).Collection(s => s.Answers);
-                foreach (var item in answers.)
-                {
-                    context.Entry(item).Reference(i => i.User).Load();
-                }
-
-                /*
-                var category = context.Categories.Where(c => c.Id == question.Category.Id).First();
-                question.Category = category;
-                Console.WriteLine(category);
-                
-                var answers = context.Answers.Where(a => a.Question.Id == question.Id).ToList();
-                question.Answers = answers;
-                Console.WriteLine(answers);
-                */
-                return View(question);
+                var questionanswermodel = new QuestionAnswer();
+                questionanswermodel.Question = question;
+               
+                return View(questionanswermodel);
             }
 
         }
+
+        [HttpPost]
+        public ActionResult AnswerQuestion(QuestionAnswer questionAnswermodel)
+        {
+            using (QuestionAnswerContext context = new QuestionAnswerContext())
+            {
+                var questionId = questionAnswermodel.Question.Id;
+                var newAnswer = questionAnswermodel.Answer;
+
+                var question = context.Questions.Find(questionId);
+                newAnswer.Question = question;
+
+                question.AnswerCount += 1;
+                context.Entry(question).State = EntityState.Modified;
+
+                //Using default user as ID = 1, since we still dont have the login feature
+                newAnswer.User = context.Users.Find(1);
+                newAnswer.CreationDate = DateTime.Now;
+
+                context.Answers.Add(newAnswer);
+                context.SaveChanges();
+
+                var updatedquestion = context.Questions
+                        .OrderBy(q => q.CreationDate)
+                        .Where(q => q.Id == questionId)
+                        .Include(q => q.Category)
+                        .Include(q => q.User)
+                        .Include(q => q.Answers)
+                        .Include(q => q.Answers.Select(lp => lp.User))
+                        .First();
+
+                var questionanswermodel = new QuestionAnswer();
+                questionanswermodel.Question = updatedquestion;
+
+                return View(questionanswermodel);
+            }
+
+        }
+
+
+
     }
 }

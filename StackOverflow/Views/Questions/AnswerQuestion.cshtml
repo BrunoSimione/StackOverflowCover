@@ -1,57 +1,79 @@
-﻿@model StackOverflow.Models.Question
+﻿@using StackOverflow.Models
+@model StackOverflow.Models.QuestionAnswer
 
 @{
     ViewBag.Title = "AnswerQuestion";
 }
 
-<h2>AnswerQuestion</h2>
-
 <div>
-    <h4>@Html.DisplayFor(model => model.QuestionName)</h4>
-    <div id="toprow">
-        <span>
-            @Html.DisplayFor(model => model.Category.Name)
-        </span>
-        <span>
-            @Html.DisplayFor(model => model.User.Name)
-        </span>
-        <span>
-            @Html.DisplayFor(model => model.CreationDate)
-        </span>
-        <span>
-            @Html.DisplayFor(model => model.ViewCount) Views
-        </span>
+    <h2>@Html.DisplayFor(model => model.Question.QuestionName)</h2>
+    <div id="toprow" class="row">
+        <div class="col-lg-3">
+            <span class="label label-primary" style="background-color:royalblue">@Html.DisplayFor(model => model.Question.Category.Name)</span>
+        </div>
+        <div class="col-lg-3">
+            <span style="color:royalblue">by @Html.DisplayFor(model => model.Question.User.Name) </span>
+        </div>
+        <div class="col-lg-3">
+            <span style="color:darkgreen">by @Html.DisplayFor(model => model.Question.CreationDate)</span>
+        </div>
+        <div class="col-lg-3">
+            <span class="badge" style="background-color:darkgreen"> @Html.DisplayFor(model => model.Question.ViewCount) </span> Views
+        </div>
+        <br /><br />
     </div>
-    <div id="answers">
-        <ul>
-            @foreach (var item in Model.Answers)
-            {   <li>
-                    <span id="answer">
+    <div>
+        <table id="answers" class="table">
+            @foreach (var item in Model.Question.Answers)
+            {
+            <tr>
+                <td>
+                    <div id="answer">
                         @Html.DisplayFor(modelItem => item.Text)
-                    </span>
-                    <span>
-                        @Html.DisplayFor(modelItem => item.User.Name)
-                    </span>
-                    <span>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </span>
+                    </div>
                     <div>
                         @if (item.User.Id == 1)
                         {
-                            <a class="btn btn-default" href="XXX">Edit &raquo;</a>
+                            <a class="btn btn-info" href="#">Edit &raquo;</a>
                         }
                     </div>
-                </li>
+                </td>
+                <td>
+                    <div>
+                        by @Html.DisplayFor(modelItem => item.User.Name)
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        on @Html.DisplayFor(modelItem => item.CreationDate)
+                    </div>
+
+                </td>
+            </tr>
             }
-        </ul>
+        </table>
     </div>
     <div id="newAnswer">
-        <h3>Add your Answer</h3>
-        <textarea rows="5" cols="100"></textarea>
-        @Html.ActionLink("Add Answer", "Index")
+        @using (Html.BeginForm("AnswerQuestion", "Questions", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <h4>Add your answer</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Answer.Text, new { htmlAttributes = new { @class = "form-control", style = "Width:300px; height:100px;" } })
+                    @Html.ValidationMessageFor(model => model.Answer.Text, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(x => x.Question.Id)
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Add Answer" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("AnswerQuestion", "Questions")'" />
+                </div>
+            </div>
+        }
     </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to list", "Questions", "Home")
 </p>

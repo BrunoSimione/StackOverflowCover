@@ -8,12 +8,10 @@ namespace StackOverflow.Models
 {
     public class Category
     {
-        public Category()
-        {
-            Question = new List<Question>();
-        }
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual List<Question> Question { get; set; }
+
+        public virtual List<Question> Questions { get; set; }
     }
 }

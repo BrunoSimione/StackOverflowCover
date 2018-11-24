@@ -16,20 +16,71 @@ namespace StackOverflow.Controllers
             return View();
         }
 
+        
+
+
+        public ActionResult List(int? id)
+        {
+            ViewBag.Message = "Your questions page.";
+            using (QuestionAnswerContext context = new QuestionAnswerContext())
+            {
+                List<Question> list;
+                if(id != null)
+                {
+                    if (id == 0)
+                    {
+                        list = context.Questions
+                        .OrderBy(x => x.CreationDate)
+                        .Include(x => x.User)
+                        .Include(x => x.Category)
+                        .ToList();
+                    }
+                    else
+                    {
+
+                        list = context.Questions
+                        .OrderBy(x => x.CreationDate)
+                        .Include(x => x.User)
+                        .Include(x => x.Category)
+                        .Where(x => x.Category.Id == id)
+                        .ToList();
+                    }
+                }
+                else
+                {
+                    list = context.Questions
+                    .OrderBy(x => x.CreationDate)
+                    .Include(x => x.User)
+                    .Include(x => x.Category)
+                    .ToList();
+                }
+                
+                return View(list);
+            }
+        }
+
         public ActionResult Create()
         {
-            return View();
+            using (QuestionAnswerContext context = new QuestionAnswerContext())
+            {
+                var categories = context.Categories.ToList();
+                QuestionCategories qc = new QuestionCategories();
+                qc.Categories = categories;
+                return View(qc);
+            }
         }
 
         // POST: Test/Create
         [HttpPost]
-        public ActionResult Create(Question question)
+        public ActionResult Create(QuestionCategories questionCat)
         {
             try
             {
+                var question = questionCat.Question;
+
                 using (QuestionAnswerContext context = new QuestionAnswerContext())
                 {
-                    question.Category = context.Categories.Find(1);
+                    question.Category = context.Categories.Find(question.Category.Id);
                     question.User = context.Users.Find(1);
 
                     question.CreationDate = DateTime.Now;
@@ -46,7 +97,13 @@ namespace StackOverflow.Controllers
             }
             catch
             {
-                return View();
+                using (QuestionAnswerContext context = new QuestionAnswerContext())
+                {
+                    var categories = context.Categories.ToList();
+                    QuestionCategories qc = new QuestionCategories();
+                    qc.Categories = categories;
+                    return View(qc);
+                }
             }
         }
     
@@ -110,6 +167,40 @@ namespace StackOverflow.Controllers
                 questionanswermodel.Question = updatedquestion;
 
                 return View(questionanswermodel);
+            }
+
+        }
+
+        public ActionResult EditAnswer(int id)
+        {
+            using (QuestionAnswerContext context = new QuestionAnswerContext())
+            {
+
+                var answer = context.Answers
+                    .Find(id);
+
+                context.Entry(answer).Reference(x => x.Question).Load();
+                context.Entry(answer).Reference(x => x.User).Load();
+
+                return View(answer);
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult EditAnswer(Answer answer)
+        {
+            using (QuestionAnswerContext context = new QuestionAnswerContext())
+            {
+
+                answer.CreationDate = DateTime.Now;
+                context.Entry(answer).State = EntityState.Modified;
+                context.SaveChanges();
+
+                context.Entry(answer).Reference(x => x.Question).Load();
+
+                //return View(answer);
+                return RedirectToAction("AnswerQuestion", "Questions", new { id = answer.Question.Id});
             }
 
         }

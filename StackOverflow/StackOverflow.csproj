@@ -181,6 +181,7 @@
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionAnswer.cs" />
     <Compile Include="Models\QuestionAnswerContext.cs" />
+    <Compile Include="Models\QuestionCategories.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -227,10 +228,11 @@
     <Content Include="Views\Questions\AnswerQuestion.cshtml" />
     <Content Include="Views\Home\Questions.cshtml" />
     <Content Include="Views\Questions\Create.cshtml" />
+    <Content Include="Views\Questions\List.cshtml" />
+    <Content Include="Views\Questions\EditAnswer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

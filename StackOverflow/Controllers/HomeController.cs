@@ -12,19 +12,28 @@ namespace StackOverflow.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            using (QuestionAnswerContext context = new QuestionAnswerContext())
+            {
+                var list = context.Questions
+                    .OrderBy(x => x.CreationDate)
+                    .Include(x => x.User)
+                    .Include(x => x.Category)
+                    .Take(5)
+                    .ToList();
+                return View(list);
+            }
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Website created by Bruno Simione Beltrame (N01220860)";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "You can contact me in:";
 
             return View();
         }

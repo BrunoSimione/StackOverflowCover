@@ -33,9 +33,9 @@ namespace StackOverflow.Migrations
                 );
 
             context.Questions.AddOrUpdate(x => x.Id,
-                new Question() { Id = 1, QuestionName = "How can I do XYZ?", CreationDate = DateTime.Now, ViewCount = 0, AnswerCount = 0, VoteCount = 0, User = context.Users.Find(1), Category = context.Categories.Find(1) },
-                new Question() { Id = 2, QuestionName = "Is it possible to do ABC?", CreationDate = DateTime.Now, ViewCount = 0, AnswerCount = 0, VoteCount = 0, User = context.Users.Find(1), Category = context.Categories.Find(2) },
-                new Question() { Id = 3, QuestionName = "Is it possible to do ABCXYZ?", CreationDate = DateTime.Now, ViewCount = 0, AnswerCount = 0, VoteCount = 0, User = context.Users.Find(2), Category = context.Categories.Find(1) }
+                new Question() { Id = 1, QuestionName = "How can I do XYZ?", CreationDate = DateTime.Now, ViewCount = 3, AnswerCount = 2, VoteCount = 3, User = context.Users.Find(1), Category = context.Categories.Find(1) },
+                new Question() { Id = 2, QuestionName = "Is it possible to do ABC?", CreationDate = DateTime.Now, ViewCount = 2, AnswerCount = 1, VoteCount = 0, User = context.Users.Find(1), Category = context.Categories.Find(2) },
+                new Question() { Id = 3, QuestionName = "Is it possible to do ABCXYZ?", CreationDate = DateTime.Now, ViewCount = 5, AnswerCount = 0, VoteCount = 1, User = context.Users.Find(2), Category = context.Categories.Find(1) }
                 );
 
             context.Answers.AddOrUpdate(x => x.Id,

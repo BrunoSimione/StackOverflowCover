@@ -8,7 +8,8 @@
 <div>
     <h2>@Html.DisplayFor(model => model.Question.QuestionName)</h2>
     <div id="toprow" class="row">
-        <div class="col-lg-3">
+
+        <div class="col-lg-2">
             <span class="label label-primary" style="background-color:royalblue">@Html.DisplayFor(model => model.Question.Category.Name)</span>
         </div>
         <div class="col-lg-3">
@@ -17,7 +18,10 @@
         <div class="col-lg-3">
             <span style="color:darkgreen">by @Html.DisplayFor(model => model.Question.CreationDate)</span>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-2">
+            <span class="badge">@Html.DisplayFor(model => model.Question.VoteCount)</span> Votes
+        </div>
+        <div class="col-lg-2">
             <span class="badge" style="background-color:darkgreen"> @Html.DisplayFor(model => model.Question.ViewCount) </span> Views
         </div>
         <br /><br />
@@ -34,7 +38,7 @@
                     <div>
                         @if (item.User.Id == 1)
                         {
-                            <a class="btn btn-info" href="#">Edit &raquo;</a>
+                            <a class="btn btn-info" href='@Url.Action("EditAnswer", "Questions", new { id = item.Id })'>Edit &raquo;</a>
                         }
                     </div>
                 </td>
@@ -75,5 +79,5 @@
     </div>
 </div>
 <p>
-    @Html.ActionLink("Back to list", "Questions", "Home")
+    @Html.ActionLink("Back to list", "List", "Questions")
 </p>
